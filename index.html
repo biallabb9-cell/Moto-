@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Belloula</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --red: #e8000d;
+      --red-dark: #a50009;
+      --orange: #ff6a00;
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #222;
+      --text: #f0f0f0;
+      --muted: #555;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      width: 100%; max-width: 900px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 32px 0;
+      position: relative; z-index: 10;
+    }
+
+    .brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.6rem, 8vw, 4.8rem);
+      letter-spacing: 0.08em;
+      color: var(--text);
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      color: var(--red);
+    }
+
+    .tagline {
+      font-size: 0.8rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 100%; max-width: 900px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--red), transparent);
+      margin: 18px 0;
+      opacity: 0.6;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      width: 100%; max-width: 900px;
+      position: relative; z-index: 5;
+      padding: 0 24px;
+    }
+
+    /* ── Motorcycle SVG ── */
+    .moto-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 0 0;
+      position: relative;
+    }
+
+    .moto-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 70%; height: 20px;
+      background: radial-gradient(ellipse, rgba(232,0,13,0.35) 0%, transparent 70%);
+      filter: blur(6px);
+    }
+
+    .moto-svg {
+      width: min(680px, 100%);
+      filter: drop-shadow(0 8px 32px rgba(232,0,13,0.35));
+      animation: float 4s ease-in-out infinite;
+      transition: filter 0.4s;
+    }
+
+    .moto-svg.running {
+      filter: drop-shadow(0 8px 48px rgba(255,106,0,0.7)) drop-shadow(0 0 80px rgba(232,0,13,0.4));
+      animation: floatFast 1.8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-10px); }
+    }
+    @keyframes floatFast {
+      0%,100% { transform: translateY(0px) rotate(-0.5deg); }
+      50%      { transform: translateY(-6px) rotate(0.5deg); }
+    }
+
+    /* ── Engine sound wave (visible when running) ── */
+    .soundwave {
+      display: flex; align-items: center; justify-content: center;
+      gap: 4px; height: 40px; margin: 4px 0 0;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .soundwave.active { opacity: 1; }
+    .soundwave .bar {
+      width: 4px; border-radius: 2px;
+      background: linear-gradient(to top, var(--red), var(--orange));
+    }
+    .soundwave .bar:nth-child(1)  { animation: wave 0.6s ease-in-out infinite 0.0s; }
+    .soundwave .bar:nth-child(2)  { animation: wave 0.6s ease-in-out infinite 0.1s; }
+    .soundwave .bar:nth-child(3)  { animation: wave 0.6s ease-in-out infinite 0.2s; }
+    .soundwave .bar:nth-child(4)  { animation: wave 0.6s ease-in-out infinite 0.05s; }
+    .soundwave .bar:nth-child(5)  { animation: wave 0.6s ease-in-out infinite 0.15s; }
+    .soundwave .bar:nth-child(6)  { animation: wave 0.6s ease-in-out infinite 0.25s; }
+    .soundwave .bar:nth-child(7)  { animation: wave 0.6s ease-in-out infinite 0.0s; }
+    .soundwave .bar:nth-child(8)  { animation: wave 0.6s ease-in-out infinite 0.2s; }
+    .soundwave .bar:nth-child(9)  { animation: wave 0.6s ease-in-out infinite 0.1s; }
+    .soundwave .bar:nth-child(10) { animation: wave 0.6s ease-in-out infinite 0.3s; }
+    @keyframes wave {
+      0%,100% { height: 6px; }
+      50%      { height: 32px; }
+    }
+
+    /* ── Speedometer / Status ── */
+    .status-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 24px;
+      margin: 18px 0;
+      position: relative; overflow: hidden;
+    }
+
+    .status-bar::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(232,0,13,0.04), transparent 60%);
+    }
+
+    .status-item { text-align: center; }
+    .status-label { font-size: 0.65rem; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+    .status-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; line-height: 1;
+      color: var(--text);
+      transition: color 0.3s;
+    }
+    .status-value.hot { color: var(--orange); }
+
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--muted);
+      box-shadow: none;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    .status-dot.on {
+      background: #00e676;
+      box-shadow: 0 0 10px #00e676, 0 0 24px rgba(0,230,118,0.5);
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex; gap: 16px;
+      justify-content: center;
+      margin: 8px 0 28px;
+    }
+
+    .btn {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.15em;
+      border: none; outline: none; cursor: pointer;
+      padding: 14px 52px;
+      border-radius: 6px;
+      position: relative; overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.3s;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0.08);
+      transform: translateX(-110%) skewX(-12deg);
+      transition: transform 0.3s;
+    }
+    .btn:hover::after { transform: translateX(110%) skewX(-12deg); }
+    .btn:active { transform: scale(0.96); }
+
+    .btn-start {
+      background: linear-gradient(135deg, var(--red) 0%, #c0000a 100%);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(232,0,13,0.4);
+    }
+    .btn-start:hover {
+      box-shadow: 0 6px 32px rgba(232,0,13,0.65);
+    }
+    .btn-start:disabled {
+      background: #333; color: #555; cursor: not-allowed;
+      box-shadow: none;
+    }
+    .btn-start:disabled::after { display: none; }
+
+    .btn-stop {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
+      box-shadow: none;
+    }
+    .btn-stop:hover {
+      border-color: var(--red);
+      color: var(--red);
+      box-shadow: 0 0 18px rgba(232,0,13,0.2);
+    }
+    .btn-stop:disabled {
+      border-color: #222; color: #333; cursor: not-allowed;
+      box-shadow: none;
+    }
+    .btn-stop:disabled::after { display: none; }
+
+    /* ── Footer ── */
+    footer {
+      font-size: 0.7rem; letter-spacing: 0.15em;
+      color: var(--muted); text-transform: uppercase;
+      padding-bottom: 20px; text-align: center;
+    }
+
+    /* ── Entrance animation ── */
+    header, .divider, .hero {
+      animation: fadeUp 0.8s ease both;
+    }
+    header  { animation-delay: 0.05s; }
+    .divider { animation-delay: 0.15s; }
+    .hero   { animation-delay: 0.25s; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Spark burst on START ── */
+    .sparks {
+      position: fixed; inset: 0; pointer-events: none; z-index: 999;
+    }
+    .spark {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+      animation: sparkFly 0.7s ease-out forwards;
+    }
+    @keyframes sparkFly {
+      0%   { opacity: 1; transform: translate(0,0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.2); }
+    }
+
+    /* ── RPM pulse ring ── */
+    .ring-wrap {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .ring {
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      border: 2px solid rgba(232,0,13,0.15);
+      position: absolute;
+      opacity: 0;
+    }
+    .ring.pulse {
+      animation: ringPulse 1.2s ease-out infinite;
+    }
+    .ring:nth-child(2) { animation-delay: 0.4s !important; }
+    .ring:nth-child(3) { animation-delay: 0.8s !important; }
+    @keyframes ringPulse {
+      0%   { transform: scale(0.5); opacity: 0.6; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <div class="brand">Bell<span>o</span>ula</div>
+      <div class="tagline">Ride The Legend</div>
+    </div>
+    <div style="text-align:left; font-size:0.72rem; letter-spacing:0.12em; color:#444; text-transform:uppercase; line-height:1.8;">
+      EST. 2024<br>Algeria
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <main class="hero">
+
+    <!-- Motorcycle SVG illustration -->
+    <div class="moto-wrap">
+      <div class="ring-wrap">
+        <div class="ring" id="r1"></div>
+        <div class="ring" id="r2"></div>
+        <div class="ring" id="r3"></div>
+      </div>
+
+      <!-- Inline motorcycle SVG (sport bike side view) -->
+      <svg class="moto-svg" id="motoSvg" viewBox="0 0 700 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shadow -->
+        <ellipse cx="350" cy="315" rx="200" ry="12" fill="rgba(0,0,0,0.5)"/>
+
+        <!-- Rear wheel -->
+        <circle cx="175" cy="270" r="72" stroke="#333" stroke-width="14"/>
+        <circle cx="175" cy="270" r="56" stroke="#444" stroke-width="6"/>
+        <circle cx="175" cy="270" r="28" fill="#1a1a1a" stroke="#555" stroke-width="4"/>
+        <!-- spokes -->
+        <line x1="175" y1="214" x2="175" y2="326" stroke="#555" stroke-width="2"/>
+        <line x1="119" y1="270" x2="231" y2="270" stroke="#555" stroke-width="2"/>
+        <line x1="135" y1="230" x2="215" y2="310" stroke="#555" stroke-width="2"/>
+        <line x1="215" y1="230" x2="135" y2="310" stroke="#555" stroke-width="2"/>
+
+        <!-- Rear wheel brake disc -->
+        <circle cx="175" cy="270" r="20" stroke="var(--red)" stroke-width="3" stroke-dasharray="6 4" opacity="0.8"/>
+
+        <!-- Swing arm -->
+        <path d="M175 270 Q 280 250 340 240" stroke="#555" stroke-width="10" stroke-linecap="round"/>
+
+        <!-- Exhaust pipe -->
+        <path d="M180 290 Q 260 295 310 285 L 310 278 Q 260 288 180 283 Z" fill="#2a2a2a" stroke="#444" stroke-width="1"/>
+        <!-- Exhaust tip -->
+        <ellipse cx="310" cy="281" rx="6" ry="9" fill="#1a1a1a" stroke="#555" stroke-width="2"/>
+
+        <!-- Main frame / body -->
+        <path d="M340 110 L500 100 L560 150 L550 240 L340 240 Z" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+
+        <!-- Fuel tank -->
+        <path d="M340 110 L470 100 L490 130 L450 145 L340 145 Z" fill="#e8000d"/>
+        <!-- Tank highlight -->
+        <path d="M355 115 L460 106 L478 128 L370 128 Z" fill="rgba(255,255,255,0.06)"/>
+        <!-- BELLOULA text on tank -->
+        <text x="390" y="135" font-family="Bebas Neue, sans-serif" font-size="18" fill="rgba(255,255,255,0.9)" letter-spacing="2">BELLOULA</text>
+
+        <!-- Fairing / cowl -->
+        <path d="M490 100 L570 120 L580 185 L550 195 L530 165 L500 145 Z" fill="#141414" stroke="#333" stroke-width="1.5"/>
+        <!-- Fairing red stripe -->
+        <path d="M500 145 L570 125 L575 140 L502 155 Z" fill="var(--red)" opacity="0.85"/>
+
+        <!-- Seat -->
+        <path d="M340 145 L450 145 L450 155 L340 155 Z" fill="#222" rx="4"/>
+        <path d="M340 145 L450 145 L448 150 L340 150 Z" fill="#333"/>
+
+        <!-- Under fairing / belly pan -->
+        <path d="M490 195 L560 185 L555 215 L490 220 Z" fill="#111" stroke="#2a2a2a" stroke-width="1"/>
+
+        <!-- Headlight -->
+        <path d="M565 125 L595 135 L590 160 L558 155 Z" fill="#0d0d0d" stroke="#333" stroke-width="1"/>
+        <path d="M568 130 L590 138 L587 155 L562 150 Z" fill="#1a1a1a"/>
+        <ellipse cx="576" cy="143" rx="12" ry="11" fill="#f5f5f0" opacity="0.95" id="headlight"/>
+
+        <!-- DRL strip -->
+        <rect x="565" y="128" width="24" height="4" rx="2" fill="#fff" opacity="0.7" id="drl"/>
+
+        <!-- Windscreen -->
+        <path d="M560 100 L595 112 L590 130 L560 118 Z" fill="rgba(120,190,255,0.12)" stroke="rgba(120,190,255,0.3)" stroke-width="1"/>
+
+        <!-- Front fork -->
+        <line x1="530" y1="165" x2="520" y2="270" stroke="#555" stroke-width="10" stroke-linecap="round"/>
+        <line x1="545" y1="165" x2="535" y2="270" stroke="#444" stroke-width="6" stroke-linecap="round"/>
+
+        <!-- Front wheel -->
+        <circle cx="527" cy="270" r="72" stroke="#333" stroke-width="14"/>
+        <circle cx="527" cy="270" r="56" stroke="#444" stroke-width="6"/>
+        <circle cx="527" cy="270" r="28" fill="#1a1a1a" stroke="#555" stroke-width="4"/>
+        <line x1="527" y1="214" x2="527" y2="326" stroke="#555" stroke-width="2"/>
+        <line x1="471" y1="270" x2="583" y2="270" stroke="#555" stroke-width="2"/>
+        <line x1="487" y1="230" x2="567" y2="310" stroke="#555" stroke-width="2"/>
+        <line x1="567" y1="230" x2="487" y2="310" stroke="#555" stroke-width="2"/>
+        <!-- Front brake disc -->
+        <circle cx="527" cy="270" r="20" stroke="var(--red)" stroke-width="3" stroke-dasharray="6 4" opacity="0.8"/>
+
+        <!-- Handlebar -->
+        <path d="M540 130 Q 550 118 565 115" stroke="#555" stroke-width="6" stroke-linecap="round"/>
+
+        <!-- Mirror -->
+        <rect x="562" y="108" width="14" height="9" rx="3" fill="#1a1a1a" stroke="#555" stroke-width="1.5" transform="rotate(-15,569,112)"/>
+
+        <!-- Taillight -->
+        <rect x="330" y="142" width="14" height="10" rx="2" fill="#c00" id="taillight"/>
+        <rect x="330" y="142" width="14" height="10" rx="2" fill="var(--red)" opacity="0.7" id="taillightGlow"/>
+
+        <!-- Kickstand shadow detail -->
+        <line x1="200" y1="290" x2="185" y2="318" stroke="#333" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <!-- Sound wave -->
+    <div class="soundwave" id="soundwave">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-label">الحالة</div>
+        <div class="status-value" id="statusText">OFF</div>
+      </div>
+      <div class="status-item">
+        <div class="status-label">RPM</div>
+        <div class="status-value" id="rpmVal">0</div>
+      </div>
+      <div class="status-item">
+        <div class="status-label">TEMP</div>
+        <div class="status-value" id="tempVal">–°</div>
+      </div>
+      <div class="status-item">
+        <div class="status-label">تشغيل</div>
+        <div class="status-dot" id="statusDot"></div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-start" id="startBtn" onclick="startEngine()">▶ Start</button>
+      <button class="btn btn-stop"  id="stopBtn"  onclick="stopEngine()" disabled>■ Stop</button>
+    </div>
+
+  </main>
+
+  <!-- Spark canvas -->
+  <div class="sparks" id="sparks"></div>
+
+  <footer>© 2024 Belloula — Algérie</footer>
+
+  <script>
+    let running = false;
+    let rpmInterval = null;
+    let rpm = 0;
+    let temp = 20;
+
+    const motoSvg   = document.getElementById('motoSvg');
+    const soundwave = document.getElementById('soundwave');
+    const statusText= document.getElementById('statusText');
+    const rpmVal    = document.getElementById('rpmVal');
+    const tempVal   = document.getElementById('tempVal');
+    const statusDot = document.getElementById('statusDot');
+    const startBtn  = document.getElementById('startBtn');
+    const stopBtn   = document.getElementById('stopBtn');
+    const headlight = document.getElementById('headlight');
+    const drl       = document.getElementById('drl');
+    const taillight = document.getElementById('taillight');
+    const rings     = [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')];
+
+    function spawnSparks(x, y) {
+      const container = document.getElementById('sparks');
+      for (let i = 0; i < 18; i++) {
+        const s = document.createElement('div');
+        s.className = 'spark';
+        const angle = Math.random() * 2 * Math.PI;
+        const dist  = 60 + Math.random() * 100;
+        s.style.left = x + 'px';
+        s.style.top  = y + 'px';
+        s.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        s.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+        s.style.background = Math.random() > 0.5 ? '#ff6a00' : '#e8000d';
+        container.appendChild(s);
+        setTimeout(() => s.remove(), 750);
+      }
+    }
+
+    function startEngine() {
+      if (running) return;
+      running = true;
+
+      // Spark at button
+      const r = startBtn.getBoundingClientRect();
+      spawnSparks(r.left + r.width/2, r.top + r.height/2);
+
+      // UI
+      startBtn.disabled = true;
+      stopBtn.disabled  = false;
+      motoSvg.classList.add('running');
+      soundwave.classList.add('active');
+      statusDot.classList.add('on');
+      statusText.textContent = 'ON';
+
+      // Headlight glow
+      headlight.setAttribute('fill', '#fffff0');
+      drl.setAttribute('opacity', '1');
+      taillight.setAttribute('fill', '#ff2222');
+
+      // Pulse rings
+      rings.forEach(r => r.classList.add('pulse'));
+
+      // RPM ramp up
+      rpm = 800;
+      temp = 20;
+      rpmVal.textContent = rpm;
+      tempVal.textContent = temp + '°';
+
+      rpmInterval = setInterval(() => {
+        if (!running) return;
+        // Slight RPM fluctuation
+        const target = 3500 + Math.sin(Date.now()/800) * 800;
+        rpm += (target - rpm) * 0.08;
+        rpm = Math.round(rpm);
+        temp = Math.min(90, temp + 0.4);
+        rpmVal.textContent = rpm;
+        tempVal.textContent = Math.round(temp) + '°';
+        if (temp > 70) rpmVal.classList.add('hot');
+      }, 100);
+    }
+
+    function stopEngine() {
+      if (!running) return;
+      running = false;
+      clearInterval(rpmInterval);
+
+      // Spark at stop button
+      const r = stopBtn.getBoundingClientRect();
+      spawnSparks(r.left + r.width/2, r.top + r.height/2);
+
+      startBtn.disabled = false;
+      stopBtn.disabled  = true;
+      motoSvg.classList.remove('running');
+      soundwave.classList.remove('active');
+      statusDot.classList.remove('on');
+      statusText.textContent = 'OFF';
+      rpmVal.classList.remove('hot');
+
+      // Headlight off
+      headlight.setAttribute('fill', '#f5f5f0');
+      drl.setAttribute('opacity', '0.7');
+      taillight.setAttribute('fill', '#c00');
+
+      // Rings off
+      rings.forEach(r => r.classList.remove('pulse'));
+
+      // RPM wind down
+      let windDown = setInterval(() => {
+        rpm = Math.max(0, rpm - 200);
+        temp = Math.max(20, temp - 1);
+        rpmVal.textContent = rpm;
+        tempVal.textContent = Math.round(temp) + '°';
+        if (rpm === 0) clearInterval(windDown);
+      }, 80);
+    }
+  </script>
+</body>
+</html>
